@@ -26,6 +26,9 @@ dependencies {
     runtimeOnly 'com.oracle.database.jdbc:ojdbc8'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // JDA (java discord API)
+    implementation 'net.dv8tion:JDA:5.0.0-beta.5'
 }
 
 tasks.named('test') {
