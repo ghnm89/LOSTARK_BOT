@@ -17,7 +17,6 @@ public class HeroApplication {
         ApplicationContext context = SpringApplication.run(HeroApplication.class, args);
         BotToken botToken = context.getBean(BotToken.class);
         String token = botToken.getBotToken();
-        System.out.println("++++ : "+token);
 
         JDA jda = JDABuilder.createDefault(token)
                 .setActivity(Activity.playing("waiting !!!"))
