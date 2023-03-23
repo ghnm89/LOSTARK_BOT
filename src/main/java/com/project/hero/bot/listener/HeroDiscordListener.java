@@ -1,6 +1,7 @@
 package com.project.hero.bot.listener;
 
 import com.project.hero.bot.model.lostark.ArmoryCard;
+import com.project.hero.bot.model.lostark.ArmoryEngraving;
 import com.project.hero.bot.model.lostark.ArmoryGem;
 import com.project.hero.bot.model.lostark.ArmoryProfile;
 import com.project.hero.bot.service.LostArkService;
@@ -26,12 +27,12 @@ public class HeroDiscordListener extends ListenerAdapter {
         TextChannel textChannel = event.getChannel().asTextChannel();
         Message message = event.getMessage();
 
-        log.info("received message ====> {} : {}", message.getAuthor().getName(), message.getContentDisplay());
-
         if (user.isBot()) {
             return;
         } else if (message.getContentDisplay().equals("")) {
             log.info("Message is empty");
+        } else {
+            log.info("received message ====> {} : {}", message.getAuthor().getName(), message.getContentDisplay());
         }
 
         if (message.getContentDisplay().startsWith("$")) {
@@ -53,6 +54,10 @@ public class HeroDiscordListener extends ListenerAdapter {
                 case "정보" -> {
                     ArmoryProfile profile = LostArkService.getUserBasicStats(args[1]);
                     ArmoryCard card = LostArkService.getUserCards(args[1]);
+                    ArmoryEngraving engraving = LostArkService.getUserEngravings(args[1]);
+                    StringBuilder sb = new StringBuilder();
+                    engraving.Effects().forEach(effect -> sb.append(effect.Name()).append("\n"));
+
                     MessageEmbed embedMsg = new EmbedBuilder()
                             .setTitle("검색 결과")
                             .setColor(Color.GREEN)
@@ -65,6 +70,7 @@ public class HeroDiscordListener extends ListenerAdapter {
                                     profile.Stats().get(1).Type() + " : " + profile.Stats().get(1).Value() + "\n" +
                                     profile.Stats().get(3).Type() + " : " + profile.Stats().get(3).Value() + "\n" +
                                     profile.Stats().get(7).Type() + " : " + profile.Stats().get(7).Value(), true)
+                            .addField("각인", sb.toString(), true)
                             .addField("카드 효과", card == null ? "장착한 카드가 없습니다." : card.Effects().get(0).Items().get(card.Effects().get(0).Items().size()-1).Name(), false)
                             .setThumbnail(profile.CharacterImage())
                             .build();
@@ -75,9 +81,9 @@ public class HeroDiscordListener extends ListenerAdapter {
                 case "검증" -> {
                     ArmoryProfile profile = LostArkService.getUserBasicStats(args[1]);
                     ArmoryGem gem = LostArkService.getUserGems(args[1]);
-                    ArmoryCard card = LostArkService.getUserCards(args[1]);
+//                    ArmoryCard card = LostArkService.getUserCards(args[1]);
 
-                    Map<String, Object> valid = validCanJoin(profile, gem, card);
+                    Map<String, Object> valid = validCanJoin(profile, gem);
                     String confirm = String.valueOf(valid.get("confirm"));
                     String failReason = String.valueOf(valid.get("reason"));
 
@@ -90,7 +96,7 @@ public class HeroDiscordListener extends ListenerAdapter {
 
     }
 
-    private Map<String, Object> validCanJoin(ArmoryProfile profile, ArmoryGem gem, ArmoryCard card) {
+    private Map<String, Object> validCanJoin(ArmoryProfile profile, ArmoryGem gem) {
         Map<String, Object> valid = new HashMap<>();
         boolean confirm = true;
         StringBuilder failReason = new StringBuilder();
