@@ -5,7 +5,11 @@ import java.util.List;
 public record ArmoryProfile(
         String CharacterImage,
         Integer ExpeditionLevel,    // 원대렙
-        List<Stats> Stats
+        List<Stats> Stats,
+        String ServerName,
+        String CharacterName,
+        String CharacterClassName,
+        String ItemMaxLevel
 
 ) {
     public record Stats(
