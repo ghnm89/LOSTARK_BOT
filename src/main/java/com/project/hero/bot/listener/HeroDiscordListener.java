@@ -57,6 +57,7 @@ public class HeroDiscordListener extends ListenerAdapter {
                             .setTitle("검색 결과")
                             .setColor(Color.GREEN)
                             .addField("이름", profile.CharacterName(), true)
+                            .addField("서버", profile.ServerName(), true)
                             .addField("클래스", profile.CharacterClassName(), true)
                             .addField("아이템 레벨", profile.ItemMaxLevel(), true)
                             .addField("원정대 레벨", String.valueOf(profile.ExpeditionLevel()), true)
@@ -64,7 +65,7 @@ public class HeroDiscordListener extends ListenerAdapter {
                                     profile.Stats().get(1).Type() + " : " + profile.Stats().get(1).Value() + "\n" +
                                     profile.Stats().get(3).Type() + " : " + profile.Stats().get(3).Value() + "\n" +
                                     profile.Stats().get(7).Type() + " : " + profile.Stats().get(7).Value(), true)
-                            .addField("카드 효과", card.Effects().get(0).Items().get(card.Effects().get(0).Items().size()-1).Name(), false)
+                            .addField("카드 효과", card == null ? "장착한 카드가 없습니다." : card.Effects().get(0).Items().get(card.Effects().get(0).Items().size()-1).Name(), false)
                             .setThumbnail(profile.CharacterImage())
                             .build();
 
