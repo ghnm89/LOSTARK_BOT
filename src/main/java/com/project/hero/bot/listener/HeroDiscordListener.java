@@ -26,7 +26,7 @@ public class HeroDiscordListener extends ListenerAdapter {
         TextChannel textChannel = event.getChannel().asTextChannel();
         Message message = event.getMessage();
 
-        log.info("get message ====> {}", message.getContentDisplay());
+        log.info("received message ====> {} : {}", message.getAuthor().getName(), message.getContentDisplay());
 
         if (user.isBot()) {
             return;
@@ -38,27 +38,40 @@ public class HeroDiscordListener extends ListenerAdapter {
             String[] args = message.getContentDisplay().substring(1).split(" ");
 
             switch (args[0]) {
-                case "정보": {
+                case "help" -> {
+                    MessageEmbed embedMsg = new EmbedBuilder()
+                            .setTitle("명령어 도움말")
+                            .setColor(Color.BLUE)
+                            .addField("캐릭터 정보 검색", "$정보 [캐릭터명]", true)
+                            .addField("레이드 자격 검증", "$검증 [캐릭터명]", false)
+                            .setDescription("모든 명령어는 ' $ ' 로 시작합니다.")
+                            .setFooter("자격 조건은 [원정대 200], [보석 7랩] 입니다.")
+                            .build();
+
+                    textChannel.sendMessageEmbeds(embedMsg).queue();
+                }
+                case "정보" -> {
                     ArmoryProfile profile = LostArkService.getUserBasicStats(args[1]);
+                    ArmoryCard card = LostArkService.getUserCards(args[1]);
                     MessageEmbed embedMsg = new EmbedBuilder()
                             .setTitle("검색 결과")
                             .setColor(Color.GREEN)
-                            .addField("캐릭터", profile.CharacterName(), true)
+                            .addField("이름", profile.CharacterName(), true)
                             .addField("클래스", profile.CharacterClassName(), true)
                             .addField("아이템 레벨", profile.ItemMaxLevel(), true)
                             .addField("원정대 레벨", String.valueOf(profile.ExpeditionLevel()), true)
-                            .addField("스탯",profile.Stats().get(0).Type() + " : " + profile.Stats().get(0).Value() + "\n" +
-                                                        profile.Stats().get(1).Type() + " : " + profile.Stats().get(1).Value() + "\n" +
-                                                        profile.Stats().get(3).Type() + " : " + profile.Stats().get(3).Value() + "\n" +
-                                                        profile.Stats().get(7).Type() + " : " + profile.Stats().get(7).Value(), true)
+                            .addField("스탯", profile.Stats().get(0).Type() + " : " + profile.Stats().get(0).Value() + "\n" +
+                                    profile.Stats().get(1).Type() + " : " + profile.Stats().get(1).Value() + "\n" +
+                                    profile.Stats().get(3).Type() + " : " + profile.Stats().get(3).Value() + "\n" +
+                                    profile.Stats().get(7).Type() + " : " + profile.Stats().get(7).Value(), true)
+                            .addField("카드 효과", card.Effects().get(0).Items().get(card.Effects().get(0).Items().size()-1).Name(), false)
                             .setThumbnail(profile.CharacterImage())
                             .build();
 
                     textChannel.sendMessageEmbeds(embedMsg).queue();
 
-                    break;
                 }
-                case "검증": {
+                case "검증" -> {
                     ArmoryProfile profile = LostArkService.getUserBasicStats(args[1]);
                     ArmoryGem gem = LostArkService.getUserGems(args[1]);
                     ArmoryCard card = LostArkService.getUserCards(args[1]);
@@ -67,19 +80,10 @@ public class HeroDiscordListener extends ListenerAdapter {
                     String confirm = String.valueOf(valid.get("confirm"));
                     String failReason = String.valueOf(valid.get("reason"));
 
-                    textChannel.sendMessage(confirm + (confirm.equals("불합격") ? "\n"+failReason : "")).queue();
+                    textChannel.sendMessage(confirm + (confirm.equals("불합격") ? "\n" + failReason : "")).queue();
 
-                    break;
                 }
-                default:
-                    StringBuilder help = new StringBuilder();
-                    help.append("모든 명령어는 ' $ ' 로 시작합니다.\n");
-                    help.append("1. 캐릭터 정보 검색  :  $정보 [캐릭터명]\n");
-                    help.append("2. 레이드 자격 검증  :  $검증 [캐릭터명]\n");
-                    help.append("   -> 자격 조건은 [원대 200], [전체 보석 7랩] 입니다.\n");
-
-                    textChannel.sendMessage("잘못된 명령어입니다. 다시 시도해 주세요!").queue();
-                    textChannel.sendMessage(help.toString()).queue();
+                default -> textChannel.sendMessage("잘못된 명령어입니다. 다시 시도해 주세요! (명령어 확인 : $help)").queue();
             }
         }
 
