@@ -30,7 +30,7 @@ public class LostArkService {
     }
 
     // 유저 캐릭터 정보 조회
-    public static ArmoryProfile getUserBasicStats(String name) {
+    public ArmoryProfile getUserBasicStats(String name) {
         URI uri = UriComponentsBuilder
                 .fromUriString(REQUEST_URI)
                 .path("armories/characters/"+name+"/profiles")
@@ -50,7 +50,7 @@ public class LostArkService {
     }
 
     // 유저 보석 정보 조회
-    public static ArmoryGem getUserGems(String name) {
+    public ArmoryGem getUserGems(String name) {
         URI uri = UriComponentsBuilder
                 .fromUriString(REQUEST_URI)
                 .path("armories/characters/"+name+"/gems")
@@ -70,7 +70,7 @@ public class LostArkService {
     }
 
     // 유저 카드 정보 조회
-    public static ArmoryCard getUserCards(String name) {
+    public ArmoryCard getUserCards(String name) {
         URI uri = UriComponentsBuilder
                 .fromUriString(REQUEST_URI)
                 .path("armories/characters/"+name+"/cards")
@@ -90,7 +90,7 @@ public class LostArkService {
     }
 
     // 유저 각인 정보 조회
-    public static ArmoryEngraving getUserEngravings(String name) {
+    public ArmoryEngraving getUserEngravings(String name) {
         URI uri = UriComponentsBuilder
                 .fromUriString(REQUEST_URI)
                 .path("armories/characters/"+name+"/engravings")
