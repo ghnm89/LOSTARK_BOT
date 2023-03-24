@@ -37,6 +37,7 @@ public class HeroDiscordListener extends ListenerAdapter {
                 case "help" -> textChannel.sendMessageEmbeds(botService.help()).queue();
                 case "정보" -> textChannel.sendMessageEmbeds(botService.characterInfo(args[1])).queue();
                 case "검증" -> textChannel.sendMessageEmbeds(botService.validCharacterCanJoin(args[1])).queue();
+                case "시너지" -> textChannel.sendMessageEmbeds(botService.characterSynergy(args[1])).queue();
                 default -> textChannel.sendMessage("잘못된 명령어입니다. 다시 시도해 주세요! (명령어 확인 : $help)").queue();
             }
         }

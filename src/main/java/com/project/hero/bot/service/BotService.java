@@ -1,5 +1,6 @@
 package com.project.hero.bot.service;
 
+import com.project.hero.bot.enums.LostArkClass;
 import com.project.hero.bot.model.lostark.ArmoryCard;
 import com.project.hero.bot.model.lostark.ArmoryEngraving;
 import com.project.hero.bot.model.lostark.ArmoryGem;
@@ -24,6 +25,7 @@ public class BotService {
                 .setColor(Color.BLUE)
                 .addField("캐릭터 정보 검색", "$정보 [캐릭터명]", true)
                 .addField("레이드 자격 검증", "$검증 [캐릭터명]", false)
+                .addField("시너지 확인", "$시너지 [클래스명]", false)
                 .setDescription("모든 명령어는 ' $ ' 로 시작합니다.")
                 .setFooter("자격 조건은 [원정대 200], [보석 7랩], [세구빛 18각] 입니다.")
                 .build();
@@ -129,4 +131,21 @@ public class BotService {
                 .setColor(confirm ? Color.BLUE : Color.RED)
                 .build();
     }
+
+    public MessageEmbed characterSynergy(String job) {
+        String synergy = LostArkClass.getSynergyByName(job);
+
+        if (synergy == null) {
+            return new EmbedBuilder()
+                    .setTitle("존재하지 않는 직업 입니다.")
+                    .setDescription("이름을 다시 확인해주세요 :)")
+                    .build();
+        } else {
+            return new EmbedBuilder()
+                    .setTitle(job)
+                    .addField("", synergy, true)
+                    .build();
+        }
+    }
+
 }
